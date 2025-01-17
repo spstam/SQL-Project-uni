@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Book Lending</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header></header>
+    <main id="main-content">
+        <section id="welcome">
+            <h2>Welcome to Our Online Library!</h2>
+            <p>Explore our vast collection of books and connect with fellow book lovers.</p>
+            <p>To browse our books and start lending, please register or log in.</p>
+        </section>
+        <section id="auth-options">
+            <button id="register-btn">Register</button>
+            <button id="login-btn">Login</button>
+        </section>
+        <section id="registration" style="display: none;">
+            <h2>Register</h2>
+            <form id="registration-form">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+        <section id="login" style="display: none;">
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" id="login-username" placeholder="Username" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+    </footer>
+    <script>
+        // Show/hide registration form
+        const registerBtn = document.getElementById('register-btn');
+        const registrationSection = document.getElementById('registration');
+        const loginSection = document.getElementById('login');
+        registerBtn.addEventListener('click', () => {
+            registrationSection.style.display = 'block';
+            loginSection.style.display = 'none';
+            document.body.style.backgroundImage = 'none';
+        });
+
+        // Show/hide login form
+        const loginBtn = document.getElementById('login-btn');
+        loginBtn.addEventListener('click', () => {
+            loginSection.style.display = 'block';
+            registrationSection.style.display = 'none';
+            document.body.style.backgroundImage = 'none';
+        });
+
+        // Registration form submission
+        const registrationForm = document.getElementById('registration-form');
+        registrationForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
+                });
+                if (response.ok) {
+                    console.log('User registered successfully');
+                    window.location.href = '/';
+                } else {
+                    const data = await response.json();
+                    console.error('Registration failed:', data.error);
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('Failed to register. Please try again later.');
+            }
+        });
+
+        // Login form submission
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Login successful');
+                    localStorage.setItem('isAdmin', data.isAdmin);
+                    console.log(data.isAdmin);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('userId', data.userId);
+
+                    window.location.href = '/book-lending';
+                    // Redirect based on admin status
+                    //if (data.isAdmin) {
+                    //    window.location.href = '/admin-options'; // Redirect admins to admin-options
+                    //} else {
+                    //    window.location.href = '/book-lending'; // Redirect regular users to book-lending
+                    //}
+                } else {
+                    const data = await response.json();
+                    console.error('Login failed:', data.error);
+                    if (data.error === 'User not found' || data.error === 'Invalid username or password') {
+                        alert(data.error);
+                    } else {
+                        alert('Login failed. Please try again later.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Lending</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Book Lending Page!</h1>
+    </header>
+
+    <main>
+        <button id="admin-button" style="display: none;">Go to Admin Panel</button>
+
+        <section id="book-list">
+            <h2>Available Books</h2>
+            <div id="add-book-form" style="display: none;">
+                <h3>Add New Book</h3>
+                <input type="text" id="title" placeholder="Title" required>
+                <input type="text" id="author" placeholder="Author" required>
+                <button onclick="addBook()">Add Book</button>
+            </div>
+            <ul id="books"></ul>
+        </section>
+    </main>
+
+    <footer>
+    </footer>
+
+    <script>
+        async function fetchAndDisplayBooks() {
+            try {
+                const response = await fetch('/api/books');
+                const books = await response.json();
+                console.log("Books fetched from API:", books); // Log the fetched books
+                const bookList = document.getElementById('books');
+                bookList.innerHTML = '';
+
+                books.forEach(book => {
+                    console.log("Book:", book.title, book.bookid); // Log each individual book object
+                    const bookItem = document.createElement('li');
+                    const id = book.id;
+                    bookItem.innerHTML = `
+    <h3><a href="/book-details.html?id=${book.bookid}">${book.title}</a></h3>
+    <p>${book.author}</p>
+`;
+                    bookList.appendChild(bookItem);
+                });
+
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        }
+
+        fetchAndDisplayBooks();
+
+        async function addBook() {
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const userId = localStorage.getItem('userId'); // Get userId from localStorage
+
+            try {
+                const response = await fetch('/api/books', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'userId': userId // Include userId in the header
+                    },
+                    body: JSON.stringify({
+                        title,
+                        author
+                    })
+                });
+                if (response.ok) {
+                    console.log('Book added successfully');
+                    window.location.href = '/book-lending';
+                    fetchAndDisplayBooks();
+                    // Scroll to the bottom of the list
+                    setTimeout(() => {
+                        const mainContent = document.querySelector('main');
+                        mainContent.scrollTop = mainContent.scrollHeight;
+                    }, 0);
+                } else {
+                    const data = await response.json();
+                    console.error('Error adding book:', data.error);
+                    // Handle error, e.g., display an error message
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error adding book:', error);
+                // Handle error, e.g., display an error message
+                alert('Failed to add book.');
+            }
+        }
+
+        // Check if the user is admin and show the add book form (on page load)
+        function checkAdmin() {
+            console.log(localStorage.getItem('isAdmin'));
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            if (isAdmin) {
+                document.getElementById('add-book-form').style.display = 'block';
+                document.getElementById('admin-button').style.display = 'block';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkAdmin());
+
+        const adminButton = document.getElementById('admin-button');
+        adminButton.addEventListener('click', () => {
+            window.location.href = '/admin.html';
+        });
+    </script>
+</body>
+</html>

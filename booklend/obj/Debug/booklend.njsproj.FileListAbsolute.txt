@@ -1,0 +1,3 @@
+C:\Users\spyro\OneDrive\Υπολογιστής\baseis\booklend\booklend\obj\Debug\booklend.njsproj.AssemblyReference.cache
+C:\Users\spyro\OneDrive\Υπολογιστής\baseis\booklend\booklend\obj\Debug\booklend.njsproj.CoreCompileInputs.cache
+C:\Users\spyro\OneDrive\Υπολογιστής\baseis\booklend\booklend\bin\Microsoft.NodejsTools.WebRole.dll

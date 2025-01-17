@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+    </header>
+    <main>
+        <section id="manage-books">
+            <h2>Manage Books</h2>
+            <form id="lent-form">
+                <input type="text" id="book-id-lent" placeholder="Enter Book ID" required>
+                <input type="text" id="lender-username" placeholder="Enter Lender Username" required>
+                <button type="submit">Mark as Lent</button>
+            </form>
+            <form id="return-form">
+                <input type="text" id="book-id-return" placeholder="Enter Book ID" required>
+                <button type="submit">Mark as Returned</button>
+            </form>
+        </section>
+        <section id="lent-books">
+            <h2>Lent Books</h2>
+            <ul id="lent-books-list"></ul>
+        </section>
+    </main>
+    <footer>
+    </footer>
+    <script>
+        async function fetchLentBooks() {
+            try {
+                const response = await fetch('/api/lent-books');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const lentBooks = await response.json();
+                const lentBooksList = document.getElementById('lent-books-list');
+                lentBooksList.innerHTML = '';
+                if (lentBooks.length === 0) {
+                    const noLentBooksItem = document.createElement('li');
+                    noLentBooksItem.textContent = "No books currently lent out.";
+                    lentBooksList.appendChild(noLentBooksItem);
+                } else {
+                    lentBooks.forEach(book => {
+                        const bookItem = document.createElement('li');
+                        bookItem.textContent = `${book.title} by ${book.author} (lent to ${book.username} on ${new Date(book.lentat).toLocaleString()})`; // Display userid
+                        lentBooksList.appendChild(bookItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching lent books:', error);
+                alert('Error fetching lent books. Please try again later.');
+            }
+        }
+
+        // Handle marking a book as lent (using form submission)
+        const lentForm = document.getElementById('lent-form');
+        lentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const bookId = document.getElementById('book-id-lent').value;
+            const username = document.getElementById('lender-username').value;
+
+            try {
+                const response = await fetch(`/api/books/${bookId}/lent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: username })
+                });
+
+                if (response.ok) {
+                    console.log('Book marked as lent');
+                    window.location.href = '/admin.html';
+                    fetchLentBooks(); // Refresh the list of lent books
+                } else {
+                    const data = await response.json();
+                    console.error('Error marking book as lent:', data.error);
+
+                    if (data.error === 'Book not found') {
+                        alert('Book not found.');
+                    } else if (data.error === 'User not found') {
+                        alert('User not found.');
+                    } else if (data.error === 'Book is already lent out'){
+                        alert('Book is already lent out');
+                    }else {
+                        alert('Failed to mark book as lent.');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error marking book as lent:', error);
+                alert('An error occurred while marking the book as lent.');
+            }
+        });
+
+        // Handle marking a book as returned (using form submission)
+        const returnForm = document.getElementById('return-form');
+        returnForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const bookId = document.getElementById('book-id-return').value;
+            const userId = localStorage.getItem('userId'); // Get userId from localStorage
+
+            try {
+                const response = await fetch(`/api/books/${bookId}/returned`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'userId': userId // Include userId in the header
+                    },
+                });
+                if (response.ok) {
+                    console.log('Book marked as returned');
+                    window.location.href = '/admin.html';
+                    fetchLentBooks(); // Refresh the list of lent books
+                } else {
+                    alert('Failed to mark book as returned.');
+                }
+            } catch (error) {
+                console.error('Error marking book as returned:', error);
+            }
+        });
+
+        fetchLentBooks();
+    </script>
+</body>
+</html>

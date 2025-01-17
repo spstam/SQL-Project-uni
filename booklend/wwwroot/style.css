@@ -1,0 +1,245 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    overflow: hidden; /* Prevent scrollbars for the body */
+}
+
+h1, h2 {
+    color: #333;
+}
+
+/* Header */
+header {
+    background: rgba(51, 51, 51, 0.8); /* Semi-transparent dark header */
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+    text-align: center;
+    height: calc(100vh - 100px); /* Adjust height to accommodate footer */
+    overflow-y: auto; /* Add vertical scrollbar to main content */
+}
+
+/* Welcome Section */
+#welcome {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+    #welcome h2 {
+        margin-bottom: 10px;
+    }
+
+    #welcome p {
+        line-height: 1.6;
+    }
+
+/* Auth Options */
+#auth-options button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    #auth-options button:hover {
+        background-color: #0069d9;
+    }
+
+/* Login & Registration Forms */
+#registration-form,
+#login-form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    width: 300px;
+    margin: 20px auto;
+}
+
+    #registration-form input[type="text"],
+    #registration-form input[type="password"],
+    #login-form input[type="text"],
+    #login-form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    #registration-form button,
+    #login-form button {
+        background-color: #5cb85c;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        #registration-form button:hover,
+        #login-form button:hover {
+            background-color: #4cae4c;
+        }
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: rgba(51, 51, 51, 0.8);
+    color: #fff;
+    position: fixed; /* Keep the footer at the bottom */
+    bottom: 0;
+    width: 100%;
+}
+
+/* Book Lending Page */
+#book-list {
+    background-color: #fff;
+    overflow-y: scroll;
+    height: 70vh;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+    #book-list h2 {
+        margin-bottom: 15px;
+    }
+
+    #book-list ul {
+        list-style: none;
+        padding: 0;
+        gap: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #book-list li {
+        width: 23%;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+#add-book-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+    #add-book-form input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    #add-book-form button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        #add-book-form button:hover {
+            background-color: #0069d9;
+        }
+
+/* Book Details Page */
+#book-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+    #book-details h2 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    #book-details p {
+        font-size: 1.1em;
+        color: #555;
+    }
+
+#reviews {
+    background-color: #f9f9f9;
+    overflow-y: scroll;
+    height: 60vh;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+    #reviews h2 {
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    #reviews ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    #reviews li {
+        margin-bottom: 10px;
+}   
+
+#lent-books ul{
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+}
+
+#lent-books li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+#admin-button {
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Add some padding */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    font-size: 16px; /* Adjust font size as needed */
+    transition: background-color 0.3s ease; /* Add a smooth transition for hover effect */
+}
+
+    #admin-button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }

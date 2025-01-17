@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Book Details</h1>
+    </header>
+    <main>
+        <section id="book-details">
+            <h2 id="title"></h2>
+            <p>Author: <span id="author"></span></p>
+        </section>
+        <section id="reviews">
+            <h3>Add a Review</h3>
+            <textarea id="review-text"></textarea>
+            <button onclick="addReview()">Submit Review</button>
+            <h2>Reviews</h2>
+            <ul id="review-list">
+            </ul>
+        </section>
+    </main>
+    <footer>
+    </footer>
+    <script>
+        // Get the book ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = parseInt(urlParams.get('id'));
+
+        console.log("Book ID from URL:", bookId); // Log the retrieved book ID
+        // Fetch book details
+        async function fetchBookDetails() {
+            try {
+                const response = await fetch(`/api/books/${bookId}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const book = await response.json();
+                document.getElementById('title').textContent = book.title;
+                document.getElementById('author').textContent = book.author;
+            } catch (error) {
+                console.error('Error fetching book details:', error);
+                alert('Error fetching book details. Please try again later.');
+            }
+        }
+
+        // Fetch book reviews
+        async function fetchBookReviews() {
+            try {
+                const response = await fetch(`/api/books/${bookId}/reviews`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const reviews = await response.json();
+                const reviewList = document.getElementById('review-list');
+                reviewList.innerHTML = '';
+                if (reviews.length === 0) {
+                    const noReviewsItem = document.createElement('li');
+                    noReviewsItem.textContent = "No reviews yet.";
+                    reviewList.appendChild(noReviewsItem);
+                } else {
+                    reviews.forEach(review => {
+                        const reviewItem = document.createElement('li');
+                        reviewItem.innerHTML = `<strong>${review.username}:</strong> ${review.reviewtext}`;
+                        reviewList.appendChild(reviewItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching book reviews:', error);
+                alert('Error fetching book reviews. Please try again later.');
+            }
+        }
+
+        // Handle adding a new review
+        async function addReview() {
+            const reviewText = document.getElementById('review-text').value;
+            const userId = localStorage.getItem('userId'); // Get userId from localStorage
+
+            try {
+                const response = await fetch(`/api/books/${bookId}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'userId': userId // Include userId in the header
+                    },
+                    body: JSON.stringify({
+                        text: reviewText
+                    })
+                });
+                if (!response.ok) {
+                    const data = await response.json();
+                    const errorMessage = data.error || 'Failed to add review';
+                    throw new Error(errorMessage);
+                }
+                console.log('Review added successfully');
+                fetchBookReviews(); // Refresh the reviews
+                document.getElementById('review-text').value = '';
+            } catch (error) {
+                console.error('Error adding review:', error);
+                alert(error.message || 'An error occurred while adding the review.');
+            }
+        }
+
+        // Check for valid bookId FIRST
+        if (isNaN(bookId)) {
+            console.error('Invalid book ID');
+            alert('Invalid book ID');
+        } else {
+            // Now fetch the details and reviews
+            fetchBookDetails();
+            fetchBookReviews();
+        }
+    </script>
+</body>
+</html>
