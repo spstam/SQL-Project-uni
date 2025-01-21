@@ -1,7 +1,7 @@
 # Installation and Execution Instructions
 
-This document describes the steps required to install and run the application.
-There is a demo of the application: demo.mp4.
+- This document describes the steps required to install and run the application.
+- There is a demo of the application: demo.mp4.
 
 ## Prerequisites
 
