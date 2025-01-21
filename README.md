@@ -1,6 +1,7 @@
 # Installation and Execution Instructions
 
 This document describes the steps required to install and run the application.
+There is a demo of the application: demo.mp4.
 
 ## Prerequisites
 
@@ -61,3 +62,5 @@ The database connection details are located in the `server.js` file.  Confirm or
 
 * The username "admin" is predefined to have more capabilities in the application.
 * Make sure you have Node.js and npm (Node Package Manager) installed on your computer.
+
+## License: MIT License
